@@ -1,0 +1,106 @@
+---
+title: "Organização de Dados"
+author: "Wellington"
+format: html
+editor: visual
+---
+
+## Organização de Dados - Noções de Probabilidade e Estatística
+
+Dado um conjunto de dados, como tratar os valores, numéricos ou não, a fim de se extrair informações a respeito de uma ou mais características de interesse?
+
+#### Conjunto de dados
+
+Os dados dos aqui usado para reproduzir os exemplos do livro, pertence a um questionário aplicado a alunos do primeiro ano de uma escola hipotética.
+
+Carregando os dados
+
+```{r}
+#| label: setup
+#| include: FALSE
+# primeiro precisamos instalar e carregar o pacote tidyverse, no qual utilizaremos para manipulação e descrição dos dados.
+if(!require("tidyverse")){install.packages("tidyverse")};library(tidyverse)
+if(!require("readxl")){install.packages("readxl")};library(readxl)
+if(!require("knitr")){install.packages("knitr")};library(knitr)
+if(!require("kableExtra")){install.packages("kableExtra")};library(kableExtra)
+
+questionario <- read_excel("Dados/cap_01/questionario.xls")
+head(questionario)
+```
+
+Informações sobre a base de dados
+
+```{r}
+str(questionario)
+```
+
+A base de dados possui 50 linhas e 14 variáveis as variáveis do banco são:
+
+-   Id: identificação do aluno.
+-   Turma: turma que o aluno foi alocado (A ou B).
+-   Sexo: sexo do aluno (M ou F).
+-   Idade: idade do aluno.
+-   Alt: altura em metros.
+-   Peso: peso em quilogramas.
+-   Filhos: número de filhos.
+-   Fuma: se o aluno fuma (S ou N).
+-   Toler: tolerância a cigarro: (I) indiferente, (P) incomoda pouco e (M) incomoda muito.
+-   Exerc: horas de exercício por semana.
+-   Cine: número de vezes que vai ao cinema por semana.
+-   OpCine: opinião sobre o cinema da sua cidade: (B) regular a boa e (M) muito boa.
+-   TV: horas de televisão por semana.
+-   OpTV: opinião sobre a programação da TV: (R) Ruim (M) média, (B) boa e (N) não sabe.
+
+#### Variáveis
+
+Classificação das variáveis
+
+-   Qualitativas: são variáveis que não podem ser medidas, apenas classificadas. Exemplo: sexo, cor dos olhos, estado civil, etc.
+-   Quantitativas: são variáveis que podem ser medidas. Exemplo: altura, peso, idade, etc.
+
+As qualitativas podem ser classificadas em:
+
+-   Nominais: quando não existe uma ordem natural entre as categorias. Exemplo: sexo, cor dos olhos, estado civil, etc.
+-   Ordinais: quando existe uma ordem natural entre as categorias. Exemplo: escolaridade, classe social, etc.
+
+As quantitativas podem ser classificadas em:
+
+-   Discretas: quando assumem valores isolados. Exemplo: número de filhos, número de carros, etc.
+-   Contínuas: quando assumem valores em uma escala contínua. Exemplo: altura, peso, idade, etc.
+
+#### Tabelas de frequência
+
+Tabela de frequência para a variável Sexo
+
+```{r}
+#| label: tab_quali
+
+questionario %>% 
+  group_by(Sexo) %>% 
+  summarise(N = n()) %>% 
+  mutate(Freq = N/sum(N)) 
+```
+
+Tabela de frequencia para a variável idade
+
+```{r}
+limites_faixas <- seq(0, 100, by = 10)
+questionario %>%
+  mutate(Faixa_Peso = cut(Peso, breaks = limites_faixas, include.lowest = F)) %>%
+  group_by(Faixa_Peso) %>%
+  summarise(N = n()) %>%
+  ungroup() %>%
+  mutate(Freq = N / sum(N))
+```
+
+Tabela de Frequência da Variável Peso
+Tabela de frequencia para a variável Peso
+```{r}
+limites_faixas <- seq(0, 36, by = 6)
+questionario %>%
+  mutate(TV = cut(TV, breaks = limites_faixas, include.lowest = F)) %>%
+  group_by(TV) %>%
+  summarise(N = n()) %>%
+  ungroup() %>%
+  mutate(Freq = N / sum(N))
+```
