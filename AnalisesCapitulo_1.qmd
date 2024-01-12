@@ -73,8 +73,6 @@ As quantitativas podem ser classificadas em:
 Tabela de frequência para a variável Sexo
 
 ```{r}
-#| label: tab_quali
-
 questionario %>% 
   group_by(Sexo) %>% 
   summarise(N = n()) %>% 
